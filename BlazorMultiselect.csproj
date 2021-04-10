@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Authors>Meysam Masoud</Authors>
+    <Copyright>© Moghaddam. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/MeysamMoghaddam/BlazorMultiselect</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MeysamMoghaddam/BlazorMultiselect</RepositoryUrl>
+    <PackageTags>BlazorWebAssembly Blazor Asp.net_Core MultiSelect</PackageTags>
+    <PackageIcon>logo.png</PackageIcon>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   
@@ -11,6 +18,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
