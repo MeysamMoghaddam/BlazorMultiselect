@@ -1,0 +1,248 @@
+﻿<div style="direction:ltr;">
+    <select id="@TagId" multiple="multiple">
+        @if (Items != null)
+        {
+            foreach (var item in Items)
+            {
+                <option value="@item.Key">@item.Value</option>
+            }
+
+        }
+    </select>
+</div>
+
+
+@code {
+
+    #region ReturnValue
+    [Parameter]
+    public string[] Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string[]> ValueChanged { get; set; }
+
+    private static Action<string[]> onMultiChangeValueAction;
+
+    private void onMultiChangeValueHandler(string[] value)
+    {
+        ValueChanged.InvokeAsync(value);
+    }
+
+    [JSInvokable]
+    public static void onMultiChangeValue(string[] value)
+    {        
+        onMultiChangeValueAction.Invoke(value);
+    }
+    #endregion
+
+    [Parameter] public string TagId { get; set; } = "multiselect";
+
+    /// <summary>
+    /// allows HTML content
+    /// </summary>
+    [Parameter] public bool EnableHTML { get; set; } = false;
+
+    /// <summary>
+    /// CSS class of the multiselect button
+    /// </summary>
+    [Parameter] public string ButtonClass { get; set; } = "custom-select";
+
+    /// <summary>
+    /// inherits the class of the button from the original select
+    /// </summary>
+    [Parameter] public bool InheritClass { get; set; } = false;
+
+    /// <summary>
+    /// width of the multiselect button
+    /// </summary>
+    [Parameter] public string ButtonWidth { get; set; } = "100%";
+
+    /// <summary>
+    /// container that holds both the button as well as the dropdown
+    /// </summary>
+    [Parameter] public string ButtonContainer { get; set; } = "<div class='btn-group' />";
+
+    /// <summary>
+    /// places the dropdown on the right side
+    /// </summary>
+    [Parameter] public bool DropRight { get; set; } = false;
+
+    /// <summary>
+    /// places the dropdown on the top
+    /// </summary>
+    [Parameter] public bool DropUp { get; set; } = false;
+
+    /// <summary>
+    /// CSS class of the selected option
+    /// </summary>
+    [Parameter] public string SelectedClass { get; set; } = "active";
+
+    /// <summary>
+    /// maximum height of the dropdown menu
+    /// if maximum height is exceeded a scrollbar will be displayed
+    /// </summary>
+    [Parameter] public bool MaxHeight { get; set; } = false;
+
+    /// <summary>
+    /// includes Select All Option
+    /// </summary>
+    [Parameter] public bool IncludeSelectAllOption { get; set; } = true;
+
+    /// <summary>
+    /// shows the Select All Option if options are more than ...
+    /// </summary>
+    [Parameter] public int IncludeSelectAllIfMoreThan { get; set; } = 0;
+
+    /// <summary>
+    /// Lable of Select All
+    /// </summary>
+    [Parameter] public string SelectAllText { get; set; } = "Select all";
+
+    /// <summary>
+    /// the select all option is added as additional option within the select
+    /// o distinguish this option from the original options the value used for the select all option can be configured using the selectAllValue option.
+    /// </summary>
+    [Parameter] public string SelectAllValue { get; set; } = "multiselect-all";
+
+    /// <summary>
+    ///  control the name given to the select all option
+    /// </summary>
+    [Parameter] public bool SelectAllName { get; set; } = true;
+
+    /// <summary>
+    /// if true, the number of selected options will be shown in parantheses when all options are seleted.
+    /// </summary>
+    [Parameter] public bool SelectAllNumber { get; set; } = true;
+
+    /// <summary>
+    /// setting both includeSelectAllOption and enableFiltering to true, the select all option does always select only the visible option
+    /// with setting selectAllJustVisible to false this behavior is changed such that always all options (irrespective of whether they are visible) are selected
+    /// </summary>
+    [Parameter] public bool SelectAllJustVisible { get; set; } = true;
+
+    /// <summary>
+    /// enables filtering
+    /// </summary>
+    [Parameter] public bool EnableFiltering { get; set; } = true;
+
+    /// <summary>
+    /// determines if is case sensitive when filtering
+    /// </summary>
+    [Parameter] public bool EnableCaseInsensitiveFiltering { get; set; } = false;
+
+    /// <summary>
+    /// enables full value filtering
+    /// </summary>
+    [Parameter] public bool EnableFullValueFiltering { get; set; } = false;
+
+    /// <summary>
+    /// if true, optgroup's will be clickable, allowing to easily select multiple options belonging to the same group
+    /// </summary>
+    [Parameter] public bool EnableClickableOptGroups { get; set; } = false;
+
+    /// <summary>
+    /// enables collapsible OptGroups
+    /// </summary>
+    [Parameter] public bool EnableCollapsibleOptGroups { get; set; } = false;
+
+    /// <summary>
+    /// collapses all OptGroups on init
+    /// </summary>
+    [Parameter] public bool CollapseOptGroupsByDefault { get; set; } = false;
+
+    /// <summary>
+    /// placeholder of filter filed
+    /// </summary>
+    [Parameter] public string FilterPlaceholder { get; set; } = "Search";
+
+    /// <summary>
+    /// possible options: 'text', 'value', 'both'
+    /// </summary>
+    [Parameter] public string FilterBehavior { get; set; } = "text";
+
+    /// <summary>
+    /// includes clear button inside the filter filed
+    /// </summary>
+    [Parameter] public bool IncludeFilterClearBtn { get; set; } = true;
+
+    /// <summary>
+    /// prevents input change event
+    /// </summary>
+    [Parameter] public bool PreventInputChangeEvent { get; set; } = false;
+
+    /// <summary>
+    /// message to display when no option is selected
+    /// </summary>
+    [Parameter] public string NonSelectedText { get; set; } = "None selected";
+
+    /// <summary>
+    /// message to display if more than numberDisplayed options are selected
+    /// </summary>
+    [Parameter] public string NSelectedText { get; set; } = "selected";
+
+    /// <summary>
+    /// message to display if all options are selected
+    /// </summary>
+    [Parameter] public string AllSelectedText { get; set; } = "All selected";
+
+    /// <summary>
+    /// determines if too many options would be displayed
+    /// </summary>
+    [Parameter] public int NumberDisplayed { get; set; } = 3;
+
+    /// <summary>
+    /// disables the multiselect if empty
+    /// </summary>
+    [Parameter] public bool DisableIfEmpty { get; set; } = false;
+
+    /// <summary>
+    ///  message to display if the multiselect is disabled
+    /// </summary>
+    [Parameter] public string DisabledText { get; set; } = "";
+
+    /// <summary>
+    /// the separator for the list of selected items for mouse-over
+    /// </summary>
+    [Parameter] public string DelimiterText { get; set; } = ", ";
+
+    /// <summary>
+    /// includes Reset Option
+    /// </summary>
+    [Parameter] public bool IncludeResetOption { get; set; } = false;
+
+    /// <summary>
+    /// includes Rest Divider
+    /// </summary>
+    [Parameter] public bool IncludeResetDivider { get; set; } = false;
+
+    /// <summary>
+    /// lable of Reset  Option
+    /// </summary>
+    [Parameter] public string ResetText { get; set; } = "Reset";
+
+    [Parameter] public Dictionary<string, string> Items { get; set; }
+
+    IJSObjectReference MultiselectJs;
+    IJSObjectReference Main;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            onMultiChangeValueAction = onMultiChangeValueHandler;
+            await Task.Delay(1000).ContinueWith(async p =>
+            {
+                MultiselectJs = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                                    "import", "./_content/BlazorMultiselect/bootstrap-multiselect.js");
+            }).ContinueWith(async p =>
+            {
+                Main = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                                   "import", "./_content/BlazorMultiselect/main.js");
+
+                await Main.InvokeVoidAsync("multiselectTag", TagId, EnableHTML, ButtonClass, InheritClass, ButtonWidth, ButtonContainer, DropRight, DropUp, SelectedClass, MaxHeight, IncludeSelectAllOption, IncludeSelectAllIfMoreThan, SelectAllText, SelectAllValue, SelectAllName, SelectAllNumber, SelectAllJustVisible, EnableFiltering, EnableCaseInsensitiveFiltering, EnableFullValueFiltering, EnableClickableOptGroups, EnableCollapsibleOptGroups, CollapseOptGroupsByDefault, FilterPlaceholder, FilterBehavior, IncludeFilterClearBtn, PreventInputChangeEvent, NonSelectedText, NSelectedText, AllSelectedText, NumberDisplayed, DisableIfEmpty, DisabledText, DelimiterText, IncludeResetOption, IncludeResetDivider, ResetText).AsTask();
+
+            });
+
+        }
+    }
+}
